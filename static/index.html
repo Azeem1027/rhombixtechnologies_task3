@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreditShield | Automated Credit Card Approval Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h2>CreditShield</h2>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" id="nav-predict" onclick="switchTab('predict-section')">
+                    <i class="fa-solid fa-square-poll-vertical"></i>
+                    <span>Apply & Predict</span>
+                </button>
+                <button class="nav-item" id="nav-analytics" onclick="switchTab('analytics-section')">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Model Analytics</span>
+                </button>
+                <button class="nav-item" id="nav-pipeline" onclick="switchTab('pipeline-section')">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span>Data Pipeline</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="model-badge">
+                    <div class="badge-dot pulse-green"></div>
+                    <span>LogisticRegression v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-title">
+                    <h1 id="page-title">Automated Approval System</h1>
+                    <p id="page-subtitle">Input customer demographics & financial data to run optimized predictive risk assessment.</p>
+                </div>
+                <div class="header-meta">
+                    <div class="meta-item">
+                        <i class="fa-solid fa-clock"></i>
+                        <span id="current-time">Real-time prediction</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Predict Tab -->
+            <section id="predict-section" class="tab-content active">
+                <div class="grid-layout">
+                    <!-- Left: Form -->
+                    <div class="card form-card">
+                        <div class="card-header">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                            <h3>Credit Application Form</h3>
+                        </div>
+                        <form id="credit-form" onsubmit="submitApplication(event)">
+                            
+                            <!-- Section 1: Demographic -->
+                            <div class="form-section">
+                                <h4 class="section-title"><span class="number">1</span> Demographic Attributes</h4>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="Gender">Gender Code (A1)</label>
+                                        <select id="Gender" required>
+                                            <option value="" disabled selected>Select code</option>
+                                            <option value="a">Code A</option>
+                                            <option value="b">Code B</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="Age">Age in Years (A2)</label>
+                                        <input type="number" id="Age" step="0.01" min="15" max="100" placeholder="e.g. 30.5" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="Married">Marital Status (A4)</label>
+                                        <select id="Married" required>
+                                            <option value="" disabled selected>Select status</option>
+                                            <option value="u">Status U</option>
+                                            <option value="y">Status Y</option>
+                                            <option value="l">Status L</option>
+                                            <option value="t">Status T</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="Citizen">Citizenship Status (A13)</label>
+                                        <select id="Citizen" required>
+                                            <option value="" disabled selected>Select citizen</option>
+                                            <option value="g">By Birth (g)</option>
+                                            <option value="s">Other (s)</option>
+                                            <option value="p">Temporary (p)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="DriversLicense">Driver's License (A12)</label>
+                                        <select id="DriversLicense" required>
+                                            <option value="f" selected>No (f)</option>
+                                            <option value="t">Yes (t)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="ZipCode">Residential Zip Code (A14)</label>
+                                        <input type="number" id="ZipCode" min="0" max="99999" placeholder="e.g. 280" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 2: Financial Status -->
+                            <div class="form-section">
+                                <h4 class="section-title"><span class="number">2</span> Financial Profile</h4>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="Income">Annual Income (A15)</label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-dollar-sign"></i>
+                                            <input type="number" id="Income" min="0" placeholder="e.g. 5000" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="Debt">Existing Debt Index (A3)</label>
+                                        <input type="number" id="Debt" step="0.001" min="0" placeholder="e.g. 4.75" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="BankCustomer">Bank Relationship (A5)</label>
+                                        <select id="BankCustomer" required>
+                                            <option value="" disabled selected>Select relationship</option>
+                                            <option value="g">Customer (g)</option>
+                                            <option value="p">Preferred (p)</option>
+                                            <option value="gg">Special (gg)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 3: Credit & Employment -->
+                            <div class="form-section">
+                                <h4 class="section-title"><span class="number">3</span> Credit & Employment History</h4>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="PriorDefault">Prior Default History (A9)</label>
+                                        <select id="PriorDefault" required>
+                                            <option value="" disabled selected>Select history</option>
+                                            <option value="t">Yes, prior defaults (t)</option>
+                                            <option value="f">No defaults (f)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="Employed">Currently Employed (A10)</label>
+                                        <select id="Employed" required>
+                                            <option value="" disabled selected>Select employment</option>
+                                            <option value="t">Yes (t)</option>
+                                            <option value="f">No (f)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="YearsEmployed">Years Employed (A8)</label>
+                                        <input type="number" id="YearsEmployed" step="0.01" min="0" placeholder="e.g. 2.5" required>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="CreditScore">Credit Score (A11)</label>
+                                        <input type="number" id="CreditScore" min="0" placeholder="e.g. 5" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="EducationLevel">Education Level (A6)</label>
+                                        <select id="EducationLevel" required>
+                                            <option value="" disabled selected>Select education category</option>
+                                            <option value="c">Category C</option>
+                                            <option value="cc">Category CC</option>
+                                            <option value="d">Category D</option>
+                                            <option value="e">Category E</option>
+                                            <option value="i">Category I</option>
+                                            <option value="j">Category J</option>
+                                            <option value="k">Category K</option>
+                                            <option value="m">Category M</option>
+                                            <option value="r">Category R</option>
+                                            <option value="q">Category Q</option>
+                                            <option value="w">Category W</option>
+                                            <option value="x">Category X</option>
+                                            <option value="aa">Category AA</option>
+                                            <option value="ff">Category FF</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="Ethnicity">Ethnicity Code (A7)</label>
+                                        <select id="Ethnicity" required>
+                                            <option value="" disabled selected>Select ethnicity category</option>
+                                            <option value="v">Category V</option>
+                                            <option value="h">Category H</option>
+                                            <option value="bb">Category BB</option>
+                                            <option value="ff">Category FF</option>
+                                            <option value="j">Category J</option>
+                                            <option value="dd">Category DD</option>
+                                            <option value="z">Category Z</option>
+                                            <option value="n">Category N</option>
+                                            <option value="o">Category O</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="btn-submit">
+                                <span id="btn-text">Run Risk Evaluation</span>
+                                <div class="spinner hidden" id="btn-spinner"></div>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Prediction Result -->
+                    <div class="card result-card placeholder-state" id="result-card">
+                        <div class="result-placeholder" id="result-placeholder">
+                            <div class="placeholder-icon">
+                                <i class="fa-solid fa-gears"></i>
+                            </div>
+                            <h3>Awaiting Risk Evaluation</h3>
+                            <p>Complete the application form on the left and submit to view the automated decision analysis powered by Logistic Regression.</p>
+                        </div>
+
+                        <div class="result-content hidden" id="result-content">
+                            <div class="card-header">
+                                <i class="fa-solid fa-square-check"></i>
+                                <h3>Evaluation Results</h3>
+                            </div>
+                            
+                            <div class="result-verdict-box" id="verdict-box">
+                                <div class="verdict-icon-container">
+                                    <i class="fa-solid" id="verdict-icon"></i>
+                                </div>
+                                <div class="verdict-text">
+                                    <span class="verdict-label">DECISION VERDICT</span>
+                                    <h2 id="verdict-title">APPROVED</h2>
+                                </div>
+                            </div>
+
+                            <!-- Radial Confidence Gauge -->
+                            <div class="gauge-section">
+                                <div class="radial-gauge-container">
+                                    <svg viewBox="0 0 100 100" class="gauge">
+                                        <!-- Background Circle -->
+                                        <circle cx="50" cy="50" r="40" class="gauge-track"></circle>
+                                        <!-- Animated Fill -->
+                                        <circle cx="50" cy="50" r="40" class="gauge-fill" id="gauge-fill" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                                    </svg>
+                                    <div class="gauge-text">
+                                        <span class="percentage" id="probability-value">0%</span>
+                                        <span class="label">Confidence</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Explainer details -->
+                            <div class="explanation-details">
+                                <h4>Key Risk Indication</h4>
+                                <div class="risk-indicators" id="risk-indicators">
+                                    <!-- Populated in JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Tab -->
+            <section id="analytics-section" class="tab-content">
+                <div class="analytics-grid">
+                    
+                    <!-- Metrics Summary Cards -->
+                    <div class="metric-summary-card">
+                        <div class="metric-val" id="metric-accuracy">0.0%</div>
+                        <div class="metric-label">Testing Accuracy</div>
+                        <div class="metric-sub">Classification Correctness</div>
+                    </div>
+                    
+                    <div class="metric-summary-card">
+                        <div class="metric-val" id="metric-f1">0.0%</div>
+                        <div class="metric-label">F1-Score</div>
+                        <div class="metric-sub">Harmonic Mean (Prec & Rec)</div>
+                    </div>
+
+                    <div class="metric-summary-card">
+                        <div class="metric-val" id="metric-roc-auc">0.000</div>
+                        <div class="metric-label">ROC-AUC</div>
+                        <div class="metric-sub">Discriminatory Capability</div>
+                    </div>
+
+                    <div class="metric-summary-card">
+                        <div class="metric-val" id="metric-best-c">0.0</div>
+                        <div class="metric-label">Best C Parameter</div>
+                        <div class="metric-sub">Inverse L2 Regularization</div>
+                    </div>
+
+                    <!-- Confusion Matrix and ROC Curve -->
+                    <div class="card col-span-2">
+                        <div class="card-header">
+                            <i class="fa-solid fa-border-all"></i>
+                            <h3>Confusion Matrix (Test Set)</h3>
+                        </div>
+                        <div class="confusion-matrix-container">
+                            <div class="cm-grid">
+                                <div class="cm-cell empty"></div>
+                                <div class="cm-cell header-cell">Predicted: Negative</div>
+                                <div class="cm-cell header-cell">Predicted: Positive</div>
+                                
+                                <div class="cm-cell header-cell row-header">Actual: Negative</div>
+                                <div class="cm-cell data-cell" id="cm-tn">
+                                    <span class="cm-value">0</span>
+                                    <span class="cm-label">True Negative (TN)</span>
+                                </div>
+                                <div class="cm-cell data-cell" id="cm-fp">
+                                    <span class="cm-value">0</span>
+                                    <span class="cm-label">False Positive (FP)</span>
+                                </div>
+                                
+                                <div class="cm-cell header-cell row-header">Actual: Positive</div>
+                                <div class="cm-cell data-cell" id="cm-fn">
+                                    <span class="cm-value">0</span>
+                                    <span class="cm-label">False Negative (FN)</span>
+                                </div>
+                                <div class="cm-cell data-cell" id="cm-tp">
+                                    <span class="cm-value">0</span>
+                                    <span class="cm-label">True Positive (TP)</span>
+                                </div>
+                            </div>
+                            <div class="cm-analysis">
+                                <h4>Matrix Analysis</h4>
+                                <ul class="analysis-list">
+                                    <li>Precision: <strong id="metric-precision">0%</strong> (reliability when positive prediction is made).</li>
+                                    <li>Recall: <strong id="metric-recall">0%</strong> (ability to identify all actual approvals).</li>
+                                    <li>Dataset Size: <span id="stat-dataset-size">0</span> entries total (<span id="stat-train-size">0</span> train, <span id="stat-test-size">0</span> test).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card col-span-2">
+                        <div class="card-header">
+                            <i class="fa-solid fa-chart-area"></i>
+                            <h3>ROC Curve</h3>
+                        </div>
+                        <div class="chart-container">
+                            <svg viewBox="0 0 400 400" class="roc-chart" id="roc-chart-svg">
+                                <!-- Grid Lines -->
+                                <line x1="40" y1="40" x2="40" y2="360" stroke="#2a2f40" stroke-width="1"></line>
+                                <line x1="40" y1="360" x2="360" y2="360" stroke="#2a2f40" stroke-width="1"></line>
+                                <line x1="40" y1="40" x2="360" y2="40" stroke="#2a2f40" stroke-width="0.5" stroke-dasharray="4"></line>
+                                <line x1="360" y1="40" x2="360" y2="360" stroke="#2a2f40" stroke-width="0.5" stroke-dasharray="4"></line>
+                                
+                                <!-- Diagonal random guess line -->
+                                <line x1="40" y1="360" x2="360" y2="40" stroke="#485273" stroke-width="1" stroke-dasharray="5"></line>
+                                
+                                <!-- Axes Labels -->
+                                <text x="200" y="390" text-anchor="middle" fill="#94a3b8" font-size="12">False Positive Rate (FPR)</text>
+                                <text x="15" y="200" text-anchor="middle" fill="#94a3b8" font-size="12" transform="rotate(-90 15 200)">True Positive Rate (TPR)</text>
+                                
+                                <!-- Axes ticks -->
+                                <text x="40" y="375" text-anchor="middle" fill="#64748b" font-size="10">0.0</text>
+                                <text x="200" y="375" text-anchor="middle" fill="#64748b" font-size="10">0.5</text>
+                                <text x="360" y="375" text-anchor="middle" fill="#64748b" font-size="10">1.0</text>
+                                
+                                <text x="30" y="360" text-anchor="end" fill="#64748b" font-size="10" dominant-baseline="middle">0.0</text>
+                                <text x="30" y="200" text-anchor="end" fill="#64748b" font-size="10" dominant-baseline="middle">0.5</text>
+                                <text x="30" y="40" text-anchor="end" fill="#64748b" font-size="10" dominant-baseline="middle">1.0</text>
+                                
+                                <!-- ROC Curve Path (Drawn by JS) -->
+                                <path d="" fill="none" stroke="var(--primary)" stroke-width="3" id="roc-curve-path"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pipeline Tab -->
+            <section id="pipeline-section" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-diagram-project"></i>
+                        <h3>Data Processing & Model Pipeline</h3>
+                    </div>
+                    
+                    <div class="pipeline-flow">
+                        <!-- Step 1 -->
+                        <div class="pipeline-step">
+                            <div class="step-num">1</div>
+                            <div class="step-details">
+                                <h4>Data Load & Parsing</h4>
+                                <p>Ingests obfuscated UCI Credit Screening dataset (`crx.data`). Replaces all occurrence of missing value symbols (`?`) with `NaN`. Maps standard variables to categorical and numerical containers.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="pipeline-step">
+                            <div class="step-num">2</div>
+                            <div class="step-details">
+                                <h4>Stratified Split</h4>
+                                <p>Splits dataset into 70% Training and 30% Testing sets using stratified sampling to maintain the exact class distribution (55% Rejected, 45% Approved) in both subsets, avoiding sampling bias.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="pipeline-step">
+                            <div class="step-num">3</div>
+                            <div class="step-details">
+                                <h4>Parallel Preprocessing Transformers</h4>
+                                <div class="sub-steps">
+                                    <div class="sub-step">
+                                        <h5>Numerical Features (Age, Income, Debt, Score, etc.)</h5>
+                                        <p><strong>Imputation:</strong> Replaces missing numbers with the <em>median</em> of that column to mitigate outlier bias.<br>
+                                        <strong>Scaling:</strong> Normalizes features to range <code>[0, 1]</code> using <code>MinMaxScaler</code> so high range variables (e.g. Income) do not dominate optimization.</p>
+                                    </div>
+                                    <div class="sub-step">
+                                        <h5>Categorical Features (Gender, Married, Education, etc.)</h5>
+                                        <p><strong>Imputation:</strong> Imputes missing values with the <em>most frequent</em> value (mode) of the column.<br>
+                                        <strong>Encoding:</strong> Performs <code>OneHotEncoder(handle_unknown='ignore')</code> to map categories into binary vectors.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="pipeline-step">
+                            <div class="step-num">4</div>
+                            <div class="step-details">
+                                <h4>Optimization via GridSearchCV</h4>
+                                <p>Runs a 5-fold cross-validation grid search to isolate the best Logistic Regression hyperparameters. Iterates across:</p>
+                                <ul>
+                                    <li>Regularization strength inverse <code>C</code>: <code>[0.001, 0.01, 0.1, 1, 10, 100]</code></li>
+                                    <li>Penalty types: <code>L1</code> (Lasso), <code>L2</code> (Ridge)</li>
+                                    <li>Optimizers: <code>liblinear</code>, <code>saga</code>, <code>lbfgs</code></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Step 5 -->
+                        <div class="pipeline-step">
+                            <div class="step-num">5</div>
+                            <div class="step-details">
+                                <h4>Deployment & Inference</h4>
+                                <p>Packages the full preprocessing <code>ColumnTransformer</code> and optimal <code>LogisticRegression</code> estimator inside a unified <code>Pipeline</code> object, guaranteeing zero data leakage and instant predictions on incoming API inputs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Custom JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
